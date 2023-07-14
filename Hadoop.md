@@ -275,18 +275,16 @@ sudo sed -i 's|hdfs://|hdfs://bigdata-srv:8020/|g' /etc/hadoop/conf/yarn-site.xm
 ```
 
 ```
-cat /etc/hadoop/conf/yarn-site.xml |grep bigdata-srv
-```
-
-```
 sudo -u hdfs yarn jar /usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar wordcount /tmp/file_teste.txt /tmp/wc_output
 ```
 
 Você deve obter o seguinte resultado:
 
-![image25](img/vm25.png)
+![image26](img/vm26.png)
+![image27](img/vm27.png)
 
 Caso não consiga, pode ser necessário reiniciar os serviços, isso pode ser feito uma a um, é só substituir start por stop nos comandos usados anteriormente, e depois iniciá-los de novo, ou usar o script de apoio:
+
 Parar:
 
 ``` sh script_apoio/stop_all_service.sh```
@@ -294,6 +292,17 @@ Parar:
 Iniciar:
 
 ``` sh script_apoio/start_all_service.sh```
+
+Repetir os passos:
+
+```
+sudo sed -i 's|hdfs://|hdfs://bigdata-srv:8020/|g' /etc/hadoop/conf/yarn-site.xml
+```
+
+```
+sudo -u hdfs yarn jar /usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar wordcount /tmp/file_teste.txt /tmp/wc_output
+```
+
 
 Para ver o arquivo gerado com a contagem, execute o seguinte comando para saber o nome do arquivo:
 
@@ -320,6 +329,27 @@ datanode        200
 de      200
 teste   200
 ```
+Também pode ver o arquivo que foi usado para fazer a contagem:
+
+```hdfs dfs -cat /tmp/file_teste.txt```
+
+Rode a mesma aplicação mudando a pasta de destino ou arquivo de entrada para praticar.
+
+Agora vamos abrir o gerenciador do cluster do Apache Hadoop YARN no seu navegador: 
+
+```seu ip :8088/cluster```
+
+O Ip é o mesmo que usou para iniciar o Moba.
+
+![image28](img/vm28.png)
+
+Nele você consegue ver as aplicações que rodou e tem acesso as IDs dessas aplicações que serão úteis nos próximos passos.
+
+Caso não abra, pode ser que precisa parar o firewall, use o seguinte comando e tente novamente:
+``` sudo systemctl stop firewalld```
+
+Para obter o log das suas aplicações use o comando:
+```sudo -u hdfs yarn logs -applicationId id_da_sua_aplicação |more```
 
 
 
