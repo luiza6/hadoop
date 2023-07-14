@@ -268,17 +268,58 @@ Na segunda opção você pode apenas usar esse comando:
 ``` sudo -u hdfs hdfs fsck /tmp/ -files -blocks -delete ``` 
 Após fazer isso é esperado que quando executar o comando ``` sudo -u hdfs hdfs fsck /tmp/ -files -blocks ``` de novo, o resultado seja esse:
 
-![image23](img/vm25.png)
+![image25](img/vm25.png)
 
 ```
 sudo sed -i 's|hdfs://|hdfs://bigdata-srv:8020/|g' /etc/hadoop/conf/yarn-site.xml
-
-cat /etc/hadoop/conf/yarn-site.xml |grep bigdata-srv
-
-sudo -u hdfs yarn jar /usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar wordcount /tmp/file_teste.txt /tmp/wc_output
-
 ```
 
-sh script_apoio/stop_all_service.sh
-sh script_apoio/start_all_service.sh
-sudo systemctl stop firewalld
+```
+cat /etc/hadoop/conf/yarn-site.xml |grep bigdata-srv
+```
+
+```
+sudo -u hdfs yarn jar /usr/lib/hadoop-mapreduce/hadoop-mapreduce-examples.jar wordcount /tmp/file_teste.txt /tmp/wc_output
+```
+
+Você deve obter o seguinte resultado:
+
+![image25](img/vm25.png)
+
+Caso não consiga, pode ser necessário reiniciar os serviços, isso pode ser feito uma a um, é só substituir start por stop nos comandos usados anteriormente, e depois iniciá-los de novo, ou usar o script de apoio:
+Parar:
+
+``` sh script_apoio/stop_all_service.sh```
+
+Iniciar:
+
+``` sh script_apoio/start_all_service.sh```
+
+Para ver o arquivo gerado com a contagem, execute o seguinte comando para saber o nome do arquivo:
+
+```hdfs dfs -ls -h /tmp/wc_output```
+
+Depois é só fazer a leitura do arquivo usando o ```cat```:
+
+```hdfs dfs -cat /tmp/wc_output/nome_do_arquivo```
+
+Terá uma saída assim:
+```
+--      200
+1       2
+10      2
+100     2
+11      2
+12      2
+13      2
+14      2
+15      2
+16      2
+..
+datanode        200
+de      200
+teste   200
+```
+
+
+
